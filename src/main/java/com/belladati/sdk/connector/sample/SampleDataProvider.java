@@ -19,7 +19,7 @@ import com.belladati.sdk.connector.PropertyValueApi.StringValue;
 import com.belladati.sdk.connector.RowApi;
 
 /**
- * Example implementation of {@link DataProviderApi}.
+ * Example implementation of {@link DataProviderApi}. It generates random values based on the configuration.
  * @author Lubomir Elko
  */
 public class SampleDataProvider extends DataProviderApi<SampleRows> {

@@ -2,9 +2,6 @@ package com.belladati.sdk.connector.sample;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +17,6 @@ import com.belladati.sdk.connector.sample.SampleDataProvider;
  * @author Lubomir Elko
  */
 public class ConnectorTest {
-
-	// TODO provide more tests
 
 	@Test
 	public void testAvailableDataProviders() throws Throwable {

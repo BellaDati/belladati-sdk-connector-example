@@ -8,9 +8,17 @@ import com.belladati.sdk.connector.RowApi;
  */
 public class SampleRow implements RowApi {
 
+	/** Index of this row **/
 	private final int rowIndex;
+
+	/** Values on this row **/
 	private final String[] values;
 
+	/**
+	 * Creates row with given {@code rowIndex} and {@code values}.
+	 * @param rowIndex Index of this row
+	 * @param values Values on this row
+	 */
 	public SampleRow(int rowIndex, String[] values) {
 		this.rowIndex = rowIndex;
 		this.values = values;
