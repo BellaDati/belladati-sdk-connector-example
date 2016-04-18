@@ -1,4 +1,4 @@
-package com.belladati.sdk.connector.sample;
+package com.belladati.sdk.connector.example.generator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +22,14 @@ import com.belladati.sdk.connector.RowApi;
  * Example implementation of {@link DataProviderApi}. It generates random values based on the configuration.
  * @author Lubomir Elko
  */
-public class SampleDataProvider extends DataProviderApi<SampleRows> {
-	private static final Log log = LogFactory.getLog(SampleDataProvider.class);
+public class RandomDataProvider extends DataProviderApi<RandomRows> {
+	private static final Log log = LogFactory.getLog(RandomDataProvider.class);
 
-	public SampleDataProvider(Map<String, PropertyValueApi<?>> properties) {
+	/**
+	 * Creates data provider that will generate random values based on the configuration.
+	 * @param properties Data provider configuration
+	 */
+	public RandomDataProvider(Map<String, PropertyValueApi<?>> properties) {
 		super(properties);
 	}
 
@@ -34,7 +38,7 @@ public class SampleDataProvider extends DataProviderApi<SampleRows> {
 	 * @return Data provider name
 	 */
 	public static String getName() {
-		return "BellaDati Connector SDK Example";
+		return "BellaDati Connector SDK Example - Random Generator";
 	}
 
 	@Override
@@ -50,22 +54,22 @@ public class SampleDataProvider extends DataProviderApi<SampleRows> {
 	}
 
 	@Override
-	public SampleRows provideImportData(ProgressBarApi progressBar) {
-		log.info("Providing import data: progressBar=" + progressBar);
-		return new SampleRows(properties, true, progressBar);
+	public RandomRows providePreviewData(int limit) {
+		log.info("Providing preview data: limit=" + limit);
+		return new RandomRows(properties, true, limit);
 	}
 
 	@Override
-	public SampleRows providePreviewData(int limit) {
-		log.info("Providing preview data: limit=" + limit);
-		return new SampleRows(properties, true, limit);
+	public RandomRows provideImportData(ProgressBarApi progressBar) {
+		log.info("Providing import data: progressBar=" + progressBar);
+		return new RandomRows(properties, true, progressBar);
 	}
 
 	@Override
 	public RowApi provideDefaultDataDefinition() {
 		log.info("Providing default column names");
-		SampleRows sampleRows = new SampleRows(properties, false, 1);
-		Iterator<SampleRow> iterator = sampleRows.iterator();
+		RandomRows sampleRows = new RandomRows(properties, false, 1);
+		Iterator<RandomRow> iterator = sampleRows.iterator();
 		try {
 			if (iterator.hasNext()) {
 				return iterator.next();

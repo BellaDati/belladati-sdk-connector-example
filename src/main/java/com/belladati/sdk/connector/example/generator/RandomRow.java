@@ -1,4 +1,4 @@
-package com.belladati.sdk.connector.sample;
+package com.belladati.sdk.connector.example.generator;
 
 import com.belladati.sdk.connector.RowApi;
 
@@ -6,7 +6,7 @@ import com.belladati.sdk.connector.RowApi;
  * Example implementation of {@link RowApi}.
  * @author Lubomir Elko
  */
-public class SampleRow implements RowApi {
+public class RandomRow implements RowApi {
 
 	/** Index of this row **/
 	private final int rowIndex;
@@ -19,7 +19,7 @@ public class SampleRow implements RowApi {
 	 * @param rowIndex Index of this row
 	 * @param values Values on this row
 	 */
-	public SampleRow(int rowIndex, String[] values) {
+	public RandomRow(int rowIndex, String[] values) {
 		this.rowIndex = rowIndex;
 		this.values = values;
 	}

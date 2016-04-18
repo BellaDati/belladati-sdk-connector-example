@@ -1,4 +1,4 @@
-package com.belladati.sdk.connector.sample;
+package com.belladati.sdk.connector.example.generator;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -10,16 +10,16 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.belladati.sdk.connector.ConnectorUtils;
 import com.belladati.sdk.connector.ProgressBarApi;
 import com.belladati.sdk.connector.PropertyValueApi;
-import com.belladati.sdk.connector.PropertyValueApi.IntegerValue;
 import com.belladati.sdk.connector.RowsApi;
 
 /**
  * Example implementation of {@link RowsApi}.
  * @author Lubomir Elko
  */
-public class SampleRows implements RowsApi<SampleRow> {
+public class RandomRows implements RowsApi<RandomRow> {
 
 	/** Date format used for datetime column **/
 	private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -45,7 +45,7 @@ public class SampleRows implements RowsApi<SampleRow> {
 	 * @param skipHeaders Flag if iterator should provide header
 	 * @param progressBar Reference to progress bar displayed on user interface during import
 	 */
-	public SampleRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, ProgressBarApi progressBar) {
+	public RandomRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, ProgressBarApi progressBar) {
 		this(properties, skipHeaders, -1, progressBar);
 	}
 
@@ -55,7 +55,7 @@ public class SampleRows implements RowsApi<SampleRow> {
 	 * @param skipHeaders Flag if iterator should provide header
 	 * @param limit Maximal number of rows that should be available through iterator
 	 */
-	public SampleRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, Integer limit) {
+	public RandomRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, Integer limit) {
 		this(properties, skipHeaders, limit, null);
 	}
 
@@ -66,7 +66,7 @@ public class SampleRows implements RowsApi<SampleRow> {
 	 * @param limit Maximal number of rows that should be available through iterator
 	 * @param progressBar Reference to progress bar displayed on user interface during import
 	 */
-	private SampleRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, Integer limit,
+	private RandomRows(Map<String, PropertyValueApi<?>> properties, boolean skipHeaders, Integer limit,
 		ProgressBarApi progressBar) {
 		this.properties = properties;
 		this.skipHeaders = skipHeaders;
@@ -75,7 +75,7 @@ public class SampleRows implements RowsApi<SampleRow> {
 	}
 
 	@Override
-	public Iterator<SampleRow> iterator() {
+	public Iterator<RandomRow> iterator() {
 		return new SampleRowsIterator();
 	}
 
@@ -89,10 +89,10 @@ public class SampleRows implements RowsApi<SampleRow> {
 	}
 
 	/**
-	 * An iterator over a random generated {@link SampleRow}s.
+	 * An iterator over a random generated {@link RandomRow}s.
 	 * @author Lubomir Elko
 	 */
-	private class SampleRowsIterator implements Iterator<SampleRow> {
+	private class SampleRowsIterator implements Iterator<RandomRow> {
 
 		/** Current index/position **/
 		private int index = 0;
@@ -107,9 +107,9 @@ public class SampleRows implements RowsApi<SampleRow> {
 		 * Creates {@link Iterator} that will iterate over random generated values.
 		 */
 		public SampleRowsIterator() {
-			this.totalRows = getIntValue("numberOfRows");
-			this.numberOfAttributes = getIntValue("numberOfAttributes");
-			this.numberOfIndicators = getIntValue("numberOfIndicators");
+			this.totalRows = ConnectorUtils.getIntValue(properties, "numberOfRows");
+			this.numberOfAttributes = ConnectorUtils.getIntValue(properties, "numberOfAttributes");
+			this.numberOfIndicators = ConnectorUtils.getIntValue(properties, "numberOfIndicators");
 			this.totalColumns = 1 + numberOfAttributes + numberOfIndicators;
 			this.attributePrefix = properties.get("attributePrefix").getValueOrDefaultAsString();
 		}
@@ -134,15 +134,13 @@ public class SampleRows implements RowsApi<SampleRow> {
 		}
 
 		@Override
-		public SampleRow next() {
-			if (progressBar != null) {
-				progressBar.set(getPercent(index, totalColumns));
-			}
+		public RandomRow next() {
+			ConnectorUtils.updateProgressBar(progressBar, index, totalRows);
 
 			if (!skipHeaders && index == 0) {
-				return new SampleRow(index++, getHeaders().toArray(new String[totalColumns]));
+				return new RandomRow(index++, getHeaders().toArray(new String[totalColumns]));
 			} else {
-				return new SampleRow(index++, generateValues().toArray(new String[totalColumns]));
+				return new RandomRow(index++, generateValues().toArray(new String[totalColumns]));
 			}
 		}
 
@@ -192,28 +190,6 @@ public class SampleRows implements RowsApi<SampleRow> {
 		 */
 		private String getRandomLetter() {
 			return RandomStringUtils.randomAlphabetic(1).toUpperCase();
-		}
-
-		/**
-		 * Returns {@link IntegerValue} by given {@code key} as {@code int}.
-		 * @param key Key of property value
-		 * @return Value as {@code int}
-		 */
-		private int getIntValue(String key) {
-			return Integer.valueOf(properties.get(key).getValueOrDefaultAsString());
-		}
-
-		/**
-		 * Returns computed percentage value that should be set in progress bar on user interface.
-		 * @param value Current index
-		 * @param max Total number of rows
-		 * @return Percentage value
-		 */
-		private int getPercent(long value, long max) {
-			if (max == 0) {
-				return 0;
-			}
-			return (int) (((float) value / max) * 100);
 		}
 
 		@Override
