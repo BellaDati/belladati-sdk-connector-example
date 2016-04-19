@@ -1,6 +1,9 @@
 # BellaDati SDK Connector Example
 
-This repository contains the sample implementation of the BellaDati SDK for custom connectors that behaves like a generator of random data. 
+This repository contains the sample implementation of the BellaDati SDK for custom connectors with 2 data providers:
+
+* [RandomDataProvider](RandomDataProvider.java) - generates random data
+* [PostgreDataProvider](PostgreDataProvider.java) - loads data from PostgreSQL database
 
 Related repository is [belladati-sdk-connector-api](https://github.com/BellaDati/belladati-sdk-connector-api/) containing the API Interfaces Definitions.
 
@@ -14,6 +17,6 @@ You will need [GnuPG and a signing key](https://docs.sonatype.org/display/Reposi
 
 When you're ready, call `mvn clean install` to build this project. Maven will create a `target` directory for this repository, containing the project's jar file and other build artifacts.
 
-## Deployment
+## Detailed instructions
 
-For all instructions please refer to the [BellaDati SDK Connector documentation](http://support.belladati.com/techdoc/Connector+SDK).
+For all detailed instructions please refer to the [BellaDati SDK Connector documentation](http://support.belladati.com/techdoc/Connector+SDK).
