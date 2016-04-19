@@ -158,9 +158,9 @@ public class PostgreRows implements RowsApi<PostgreRow> {
 	public String[] getColumns() {
 		if (metaData != null) {
 			List<String> l = new ArrayList<String>();
-			for (int i = 1; i < getTotalColumns(); i++) {
+			for (int i = 0; i < getTotalColumns(); i++) {
 				try {
-					l.add(i, metaData.getColumnName(i));
+					l.add(i, metaData.getColumnName(i + 1));
 				} catch (Exception e) {
 					log.warn("Cannot get column names", e);
 					return null;

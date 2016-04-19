@@ -37,6 +37,9 @@ public class PostgreDataProvider extends DataProviderApi<PostgreRows> {
 	/** Factory for connections to the PostgreSQL data source that this {@link DataSource} object represents **/
 	private DataSource dataSource;
 
+	/** Connection properties used to create {@link DataSource} **/
+	private Properties connectionProperties;
+
 	/**
 	 * Creates data provider that will get values from PostgreSQL based on the configuration.
 	 * @param properties Data provider configuration
@@ -182,7 +185,7 @@ public class PostgreDataProvider extends DataProviderApi<PostgreRows> {
 	}
 
 	private Connection createConnection() throws SQLException {
-		Connection conn = createDataSource().getConnection();
+		Connection conn = getOrCreateDataSource().getConnection();
 		conn.setAutoCommit(false);
 		return conn;
 	}
@@ -196,32 +199,41 @@ public class PostgreDataProvider extends DataProviderApi<PostgreRows> {
 		} catch (SQLException e) {}
 	}
 
-	private DataSource createDataSource() {
-		if (dataSource == null) {
+	private DataSource getOrCreateDataSource() {
+		Properties currentProperties = getConnectionProperties();
+		if (dataSource == null || connectionProperties == null || !connectionProperties.equals(currentProperties)) {
 			cleanup();
-
-			DriverManagerDataSource ds = new DriverManagerDataSource();
-			ds.setDriverClassName(Driver.class.getName());
-			ds.setUrl(getConnectionUrl());
-
-			Properties p = new Properties();
-			for (Entry<String, PropertyValueApi<?>> entry : properties.entrySet()) {
-				if (entry.getValue().getValueOrDefault() != null) {
-					p.put(entry.getKey(), entry.getValue().getValueOrDefaultAsString());
-				}
-			}
-			if (p.get("user") != null) {
-				ds.setUsername(p.getProperty("user"));
-			}
-			if (p.get("password") != null) {
-				ds.setPassword(p.getProperty("password"));
-			}
-			ds.setConnectionProperties(p);
-
-			log.info("Created DriverManagerDataSource with URL: " + ds.getUrl());
-			dataSource = ds;
+			connectionProperties = currentProperties;
+			dataSource = createDataSource(currentProperties);
 		}
 		return dataSource;
+	}
+
+	private DataSource createDataSource(Properties properties) {
+		DriverManagerDataSource ds = new DriverManagerDataSource();
+		ds.setDriverClassName(Driver.class.getName());
+		ds.setUrl(getConnectionUrl());
+
+		if (properties.get("user") != null) {
+			ds.setUsername(properties.getProperty("user"));
+		}
+		if (properties.get("password") != null) {
+			ds.setPassword(properties.getProperty("password"));
+		}
+		ds.setConnectionProperties(properties);
+
+		log.info("Created DriverManagerDataSource with URL: " + ds.getUrl());
+		return ds;
+	}
+
+	private Properties getConnectionProperties() {
+		Properties p = new Properties();
+		for (Entry<String, PropertyValueApi<?>> entry : properties.entrySet()) {
+			if (entry.getValue().getValueOrDefault() != null) {
+				p.put(entry.getKey(), entry.getValue().getValueOrDefaultAsString());
+			}
+		}
+		return p;
 	}
 
 	private String getSqlQuery() {
@@ -252,13 +264,13 @@ public class PostgreDataProvider extends DataProviderApi<PostgreRows> {
 
 	private PreparedStatement createSizeStatement(Connection connection) {
 		final String innerSql = getSqlQuery().replace(';', ' ').replace('\n', ' ');
-		final String countSQL = "select count(*) from (" + innerSql + ") as t";
+		final String countSql = "select count(*) from (" + innerSql + ") as t";
 
 		try {
-			PreparedStatement ps = createPreparedStatement(connection, countSQL, 1);
+			PreparedStatement ps = createPreparedStatement(connection, countSql, 1);
 			return ps;
 		} catch (SQLException e) {
-			log.error("Count SQL error: " + countSQL, e);
+			log.error("Count SQL error: " + countSql, e);
 			return null;
 		}
 	}
