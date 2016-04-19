@@ -2,8 +2,8 @@
 
 This repository contains the sample implementation of the BellaDati SDK for custom connectors with 2 data providers:
 
-* [RandomDataProvider](RandomDataProvider.java) - generates random data
-* [PostgreDataProvider](PostgreDataProvider.java) - loads data from PostgreSQL database
+* [RandomDataProvider](./src/main/java/com/belladati/sdk/connector/example/generator/RandomDataProvider.java) - generates random data
+* [PostgreDataProvider](./src/main/java/com/belladati/sdk/connector/example/sql/PostgreDataProvider.java) - loads data from PostgreSQL database
 
 Related repository is [belladati-sdk-connector-api](https://github.com/BellaDati/belladati-sdk-connector-api/) containing the API Interfaces Definitions.
 
