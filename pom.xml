@@ -4,7 +4,7 @@
 
     <groupId>com.belladati</groupId>
     <artifactId>sdk-connector-example</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.8</version>
     <packaging>jar</packaging>
 
     <name>BellaDati SDK Connector Example</name>
@@ -40,7 +40,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
-        <belladati.sdk.connector.version>0.0.5</belladati.sdk.connector.version>
+        <belladati.sdk.connector.version>0.0.6</belladati.sdk.connector.version>
         <jcl.logging.version>1.7.5</jcl.logging.version>
         <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
         <postgresql.driver.version>9.4-1201-jdbc41</postgresql.driver.version>
